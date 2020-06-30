@@ -9,7 +9,7 @@ from .serializers import RegisterSerializer,LoginSerializer,UserSerializer
 from .models import User
 
 
-class RegisterSerializer(generics.GenericAPIView):
+class RegisterAPI(generics.GenericAPIView):
     serializer_class =  RegisterSerializer
 
     def post(self,request,*args,**kwargs):
