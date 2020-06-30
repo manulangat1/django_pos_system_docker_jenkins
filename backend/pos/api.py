@@ -5,8 +5,8 @@ from rest_framework import permissions
 
 from knox.models import AuthToken
 
-from .serializers import RegisterSerializer,LoginSerializer,UserSerializer,ItemSerializer
-from .models import User,Item
+from .serializers import RegisterSerializer,LoginSerializer,UserSerializer,ItemSerializer,OrderItemsSerializer
+from .models import User,Item,OrderItems
 
 
 class RegisterAPI(generics.GenericAPIView):
@@ -54,3 +54,13 @@ class ItemDetailsAPI(generics.RetrieveAPIView):
     serializer_class = ItemSerializer
     queryset = Item.objects.all()
     lookup_field = 'slug'
+
+class OrderItemsAPI(generics.ListCreateAPIView):
+    serializer_class = OrderItemsSerializer
+
+    def get_queryset(self):
+        qs = OrderItems.objects.filter(ordered=False,user=self.request.user)
+        print(qs)
+        return qs
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
