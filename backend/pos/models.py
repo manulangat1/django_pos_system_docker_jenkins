@@ -33,3 +33,22 @@ class Item(models.Model):
     
     def __str__(self):
         return self.title
+
+class OrderItems(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(Item,on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False,blank=True,null=True)
+    quantity = models.IntegerField(default=1,blank=True,null=True)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.item.title}"
+    def get_item_price(self):
+        return self.quantity * self.item.price
+    def get_discount_price(self):
+        return self.quantity * self.item.price
+    def get_amount_saved(self):
+        return self.get_item_price() - self.get_discount_price()
+    def get_final_price(self):
+        if self.item.discount_price:
+            return self.get_discount_price()
+        return self.get_item_price()
