@@ -44,5 +44,13 @@ class UserAPI(generics.RetrieveUpdateAPIView):
         return Response({"Added successfully"})
 
 class ItemAPI(generics.ListCreateAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
     serializer_class = ItemSerializer
     queryset = Item.objects.all()
+
+class ItemDetailsAPI(generics.RetrieveAPIView):
+    serializer_class = ItemSerializer
+    queryset = Item.objects.all()
+    lookup_field = 'slug'
