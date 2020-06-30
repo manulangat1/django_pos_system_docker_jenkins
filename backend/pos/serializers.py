@@ -15,28 +15,26 @@ class RegisterSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'bio'
-            'is_staff'
         )
         extra_kwargs = {'password':{'write_only':'True'}}
     def create(self, validated_data):
-        user = User.objects.create(username=validated_data['username'],email=validated_data['email'],password=validated_data['password'],)
+        user = User.objects.create_user(username=validated_data['username'],email=validated_data['email'],password=validated_data['password'])
         user.bio = validated_data['bio']
-        user.is_staff = validated_data['is_staff']
+        user.is_staff = True
+        user.save()
         return user
     
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=200)
-    password = serializers.CharField(max_length=200)
+    username = serializers.CharField()
+    password =  serializers.CharField()
 
     def validate(self, data):
         user = authenticate(**data)
         if user and user.is_active:
             return user
-        return serializers.ValidationError({"Incorrect Validations"})
-
+        return serializers.ValidationError("Incorect Credential")
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','username','email', 
-            'bio'
-            'is_staff')
+            'bio')
