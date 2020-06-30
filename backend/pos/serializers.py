@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from django.contrib.auth import authenticate
 
-from .models import User 
+from .models import User ,Item
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -38,3 +38,17 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','username','email', 
             'bio')
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = (
+            'id',
+            'price',
+            'description',
+            'pic',
+            'discount_price',
+            'slug',
+            'category',
+            'label'
+        )
