@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from .serializers import RegisterSerializer,LoginSerializer,UserSerializer,ItemSerializer,OrderItemsSerializer, OrderSerializer
-from .models import User,Item,OrderItems, Order
+from .models import User,Item,OrderItems, Order, MpesaPayment
 
 
 class RegisterAPI(generics.GenericAPIView):
@@ -144,7 +144,20 @@ class ManipulateQuantity(APIView):
         return Response(status=HTTP_400_BAD_REQUEST)
 
 ##mpesa intergrations 
-from django.http import HttpResponse,JSONResponse
+from django.http import HttpResponse,JsonResponse
 import requests
 from requests.auth import HTTPBasicAuth
 import json 
+from . mpesa_credentials import MpesaAccessToken, LipanaMpesaPpassword
+from django.views.decorators import scrf_exempt
+
+from decouple import config 
+def getAccessToken(request):
+    consumer_key = config('consumer_key')
+    consumer_secret = config('consumer_secret')
+    api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+    r = requests.get(api_URL,auth=HTTPBasicAuth(consumer_key,consumer_secret))
+    mpesa_access_token = json.loads(r.text)
+    validated_mpesa_access_token = mpesa_access_token['token']
+
+    return HttpResponse(validated_mpesa_access_token)
