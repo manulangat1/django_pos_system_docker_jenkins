@@ -120,3 +120,25 @@ class RemoveFromCart(APIView):
                 print(order_item)
                 order.items.remove(order_item)
         return Response({"Successfully removed from cart"},status=HTTP_200_OK)
+
+class ManipulateQuantity(APIView):
+    def post(self,request,*args,**kwargs):
+        slug = request.data['slug']
+        quantity = request.data['quantity']
+
+        if not slug and not quantity:
+             return Response({"Item to be reomved is requuire "},status=HTTP_400_BAD_REQUEST)
+        item = get_object_or_404(Item,slug=slug)
+        order_qs = Order.objects.filter(user=request.user,ordered=False)
+        if order_qs.exists():
+            order = order_qs[0]
+            if order.items.filter(item__slug=slug).exists():
+                order_item = OrderItems.objects.filter(user=request.user,item=item)[0]
+                if order_item.quantity  >= quantity:
+                    order_item.quantity -=  quantity
+                    order_item.save()
+                    print(order_item.quantity)
+                    return Response({"done"})
+                return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(status=HTTP_400_BAD_REQUEST)
+        return Response(status=HTTP_400_BAD_REQUEST)
