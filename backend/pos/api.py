@@ -149,7 +149,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 import json 
 from . mpesa_credentials import MpesaAccessToken, LipanaMpesaPpassword
-from django.views.decorators import scrf_exempt
+# from django.views.decorators import csrf_exempt
+from django.views.decorators.csrf import  csrf_exempt
 
 from decouple import config 
 def getAccessToken(request):
@@ -158,7 +159,7 @@ def getAccessToken(request):
     api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
     r = requests.get(api_URL,auth=HTTPBasicAuth(consumer_key,consumer_secret))
     mpesa_access_token = json.loads(r.text)
-    validated_mpesa_access_token = mpesa_access_token['token']
+    validated_mpesa_access_token = mpesa_access_token['access_token']
 
     return HttpResponse(validated_mpesa_access_token)
 
@@ -176,7 +177,7 @@ def lipa_na_mpesa_online(request):
         "PartyB": LipanaMpesaPpassword.Business_short_code,
         "PhoneNumber": 254740415950,  # replace with your phone number to get stk push
         "CallBackURL": "https://sandbox.safaricom.co.ke/mpesa/",
-        "AccountReference": "Henry",
+        "AccountReference": "Manulangat",
         "TransactionDesc": "Testing stk push"
     }
     response = requests.post(api_url, json=request, headers=headers)
