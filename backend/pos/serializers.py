@@ -5,7 +5,14 @@ from django.contrib.auth import authenticate
 
 from .models import User ,Item, OrderItems, Order
 
+class StringSerializer(serializers.StringRelatedField):
+    def to_internal_value(self, value):
+        return value
 
+
+# class StringSerializer(serializers.StringRelatedField):
+#     def to_internal_value(self,value):
+#         return value
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
@@ -54,24 +61,28 @@ class ItemSerializer(serializers.ModelSerializer):
         )
 
 class OrderItemsSerializer(serializers.ModelSerializer):
-    item = serializers.SerializerMethodField()
+    item_obj = serializers.SerializerMethodField()
     final_price = serializers.SerializerMethodField()
+    item = StringSerializer()
     class Meta:
         model = OrderItems
         fields = (
             'id',
             'item',
+            'item_obj',
             'ordered',
-            'final_price'
+            'final_price',
+            'quantity'
         )
-    def get_item(self,obj):
-        return ItemSerializer(self.item.all(),many=True).data
+    def get_item_obj(self,obj):
+        return ItemSerializer(obj.item).data
     def get_final_price(self,obj):
         return obj.get_final_price()
 
 class OrderSerializer(serializers.ModelSerializer):
     orderItems = serializers.SerializerMethodField()
     total = serializers.SerializerMethodField()
+    
     class Meta:
         model = Order
         fields = (
