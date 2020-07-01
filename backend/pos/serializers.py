@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from django.contrib.auth import authenticate
 
-from .models import User ,Item, OrderItems
+from .models import User ,Item, OrderItems, Order
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -68,3 +68,19 @@ class OrderItemsSerializer(serializers.ModelSerializer):
         return ItemSerializer(self.item.all(),many=True).data
     def get_final_price(self,obj):
         return obj.get_final_price()
+
+class OrderSerializer(serializers.ModelSerializer):
+    orderItems = serializers.SerializerMethodField()
+    total = serializers.SerializerMethodField()
+    class Meta:
+        model = Order
+        fields = (
+            'id',
+            'items',
+            'total',
+            'orderItems'
+        )
+    def get_orderItems(self,obj):
+        return OrderItemsSerializer(obj.items.all(),many=True).data
+    def get_total(self,obj):
+        return obj.get_total()
