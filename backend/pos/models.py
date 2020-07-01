@@ -52,3 +52,15 @@ class OrderItems(models.Model):
         if self.item.discount_price:
             return self.get_discount_price()
         return self.get_item_price()
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    items = models.ManyToManyField(OrderItems)
+    start_date = models.DateTimeField(auto_now_add=True)
+    ordered_date = models.DateTimeField()
+    ordered = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
+    
