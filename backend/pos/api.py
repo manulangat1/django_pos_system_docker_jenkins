@@ -142,3 +142,9 @@ class ManipulateQuantity(APIView):
                 return Response(status=HTTP_400_BAD_REQUEST)
             return Response(status=HTTP_400_BAD_REQUEST)
         return Response(status=HTTP_400_BAD_REQUEST)
+
+##mpesa intergrations 
+from django.http import HttpResponse,JSONResponse
+import requests
+from requests.auth import HTTPBasicAuth
+import json 
