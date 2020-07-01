@@ -1,13 +1,20 @@
-FROM python:3.6 
+# start from an official image
+FROM python:3.6
 
-RUN mkdir -p /code
-WORKDIR /code 
+# arbitrary location choice: you can change the directory
+RUN mkdir -p /opt/services/djangoapp/src
+WORKDIR /opt/services/djangoapp/src
 
-RUN pip install -r requirementst.txt
+# install our dependencies
+# we use --system flag because we don't need an extra virtualenv
+COPY . /opt/services/djangoapp/src/
+RUN pip install -r requirements.txt
 
+# copy our project code
+COPY . /opt/services/djangoapp/src
 
-COPY . /code 
-
+# expose the port 8000
 EXPOSE 8000
 
-CMD ["gunicorn","--chdir","backend",":8000","backend.wsgi:application",]
+# define the default command to run when starting the container
+CMD ["gunicorn", "--chdir", "backend", "--bind", ":8000", "backend.wsgi:application"]
