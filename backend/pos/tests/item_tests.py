@@ -29,6 +29,8 @@ def test_items_list(api_client_with_credentials):
     response = api_client_with_credentials.get(url)
     assert response.status_code == 200
 
+
+
 @pytest.mark.django_db
 def test_orders_list(api_client_with_credentials):
     url = reverse_lazy('cart_list')
