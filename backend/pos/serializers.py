@@ -3,9 +3,16 @@ from rest_framework.response import Response
 
 from django.contrib.auth import authenticate
 
-from .models import User ,Item
+from .models import User ,Item, OrderItems, Order
+
+class StringSerializer(serializers.StringRelatedField):
+    def to_internal_value(self, value):
+        return value
 
 
+# class StringSerializer(serializers.StringRelatedField):
+#     def to_internal_value(self,value):
+#         return value
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User 
@@ -52,3 +59,39 @@ class ItemSerializer(serializers.ModelSerializer):
             'category',
             'label'
         )
+
+class OrderItemsSerializer(serializers.ModelSerializer):
+    item_obj = serializers.SerializerMethodField()
+    final_price = serializers.SerializerMethodField()
+    item = StringSerializer()
+    class Meta:
+        model = OrderItems
+        fields = (
+            'id',
+            'item',
+            'item_obj',
+            'ordered',
+            'final_price',
+            'quantity'
+        )
+    def get_item_obj(self,obj):
+        return ItemSerializer(obj.item).data
+    def get_final_price(self,obj):
+        return obj.get_final_price()
+
+class OrderSerializer(serializers.ModelSerializer):
+    orderItems = serializers.SerializerMethodField()
+    total = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Order
+        fields = (
+            'id',
+            'items',
+            'total',
+            'orderItems'
+        )
+    def get_orderItems(self,obj):
+        return OrderItemsSerializer(obj.items.all(),many=True).data
+    def get_total(self,obj):
+        return obj.get_total()
