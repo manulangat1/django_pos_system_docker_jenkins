@@ -2,10 +2,10 @@
 
 // CODE_CHANGES = getGitChanges()
 pipeline {
-    agent none
-    enviroment { 
-        VERSION = "1.3.0"
-    }
+    agent any
+    // enviroment { 
+    //     VERSION = "1.3.0"
+    // }
     stages {
         stage('build') {
             steps {
