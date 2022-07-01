@@ -25,29 +25,16 @@ pipeline {
             }
         }
         stage('test') {
-            // when { 
-            //     expression { 
-            //         BRANCH_NAME == 'dev' || BRANCH_NAME == 'master'
-            //     }
-            // }
             steps {
                 script {
-                    echo "Testing the application..."
+                    gv.testApp()
                 }
             }
         }
         stage('deploy') {
             steps {
                 script {
-                    echo "Deploying the application..."
-                    // echo "Deploying with ${SERVER_CREDENTIAL}"
-                    // sh "${SERVER_CREDENTIAL}"
-                    // withCredentials([
-                    //         usernamePassword(credentials: 'server-credentials', usernameVariable: USER , passwordVariable: PASSWORD)
-                    //     ]) { 
-                    //         sh "some script ,"
-                        
-                    // }
+                    gv.deployApp()
                 }
             }
         }        
