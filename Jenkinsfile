@@ -3,9 +3,10 @@
 // CODE_CHANGES = getGitChanges()
 pipeline {
     agent any
-    // enviroment { 
-    //     VERSION = "1.3.0"
-    // }
+    enviroment { 
+        VERSION = "1.3.0"
+        SERVER_CREDENTIAL = credentials('server-credentials')
+    }
     stages {
         stage('build') {
             steps {
@@ -37,6 +38,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying the application..."
+                    echo "Deploying with ${SERVER_CREDENTIAL}"
                 }
             }
         }
