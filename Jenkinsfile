@@ -39,20 +39,9 @@ pipeline {
                 script {
                     echo "Deploying the application..."
                     echo "Deploying with ${SERVER_CREDENTIAL}"
+                    sh "${SERVER_CREDENTIAL}"
                 }
             }
-        }
-        // post { 
-        //     always{ 
-        //         echo "This is always done"
-        //     }
-        // success{ 
-        //     echo "This build is done"
-        // }
-        // failure{ 
-        //     echo "This build failed, why?"
-        // }
-        // }
-        
+        }        
     }
 }
