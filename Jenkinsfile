@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 
 // CODE_CHANGES = getGitChanges()
+def gv
 pipeline {
     agent any
     // enviroment { 
@@ -8,17 +9,18 @@ pipeline {
     //     SERVER_CREDENTIAL = credentials('server-credentials')
     // }
     stages {
+        stage('init') { 
+            steps{ 
+                script {
+                    gv = load "script.groovy" 
+
+                }
+            }
+        }
         stage('build') {
             steps {
-                // when { 
-                //     expression{ 
-                //         BRANCH_NAME == 'dev' && CODE_CHANGES=true
-                //     }
-                // }
                 script {
-                    echo "Building the application..."
-                    echo "we will add a decralative pipeline later"
-                    // echo "Building version ${VERSION}"
+                    gv.builApp()
                 }
             }
         }
@@ -40,12 +42,12 @@ pipeline {
                     echo "Deploying the application..."
                     // echo "Deploying with ${SERVER_CREDENTIAL}"
                     // sh "${SERVER_CREDENTIAL}"
-                    withCredentials([
-                            usernamePassword(credentials: 'server-credentials', usernameVariable: USER , passwordVariable: PASSWORD)
-                        ]) { 
-                            sh "some script ,"
+                    // withCredentials([
+                    //         usernamePassword(credentials: 'server-credentials', usernameVariable: USER , passwordVariable: PASSWORD)
+                    //     ]) { 
+                    //         sh "some script ,"
                         
-                    }
+                    // }
                 }
             }
         }        
