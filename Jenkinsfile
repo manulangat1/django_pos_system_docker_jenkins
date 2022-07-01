@@ -43,7 +43,7 @@ pipeline {
                     withCredentials([
                             usernamePassword(credentials: 'server-credentials', usernameVariable: USER , passwordVariable: PASSWORD)
                         ]) { 
-                            sh " some script , ${env.USER}  - ${env.PASSWORD}"
+                            sh "some script ,"
                         
                     }
                 }
