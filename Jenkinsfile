@@ -3,10 +3,10 @@
 // CODE_CHANGES = getGitChanges()
 pipeline {
     agent any
-    enviroment { 
-        VERSION = "1.3.0"
-        SERVER_CREDENTIAL = credentials('server-credentials')
-    }
+    // enviroment { 
+    //     VERSION = "1.3.0"
+    //     SERVER_CREDENTIAL = credentials('server-credentials')
+    // }
     stages {
         stage('build') {
             steps {
@@ -18,7 +18,7 @@ pipeline {
                 script {
                     echo "Building the application..."
                     echo "we will add a decralative pipeline later"
-                    echo "Building version ${VERSION}"
+                    // echo "Building version ${VERSION}"
                 }
             }
         }
@@ -38,8 +38,8 @@ pipeline {
             steps {
                 script {
                     echo "Deploying the application..."
-                    echo "Deploying with ${SERVER_CREDENTIAL}"
-                    sh "${SERVER_CREDENTIAL}"
+                    // echo "Deploying with ${SERVER_CREDENTIAL}"
+                    // sh "${SERVER_CREDENTIAL}"
                 }
             }
         }        
